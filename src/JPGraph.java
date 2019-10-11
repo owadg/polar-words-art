@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class JPGraph extends JPanel {
     // color constants
@@ -31,24 +32,31 @@ public class JPGraph extends JPanel {
         //painting background is why i call that
         super.paintComponent(g);
 
-
         Graphics2D g2 = (Graphics2D) g;
+
         //sets the origin of the pGraph's converted xy coords to somewhere near the bottom left of the screen
         Point[] XYCoords = p.getXYCoords(this.getWidth()/3, this.getHeight() - this.getHeight()/10);
+
+        //var for manipulating rotation for string
+        double degree = 0;
+
         for(int i = 0; i < XYCoords.length; i++){
 
             //draw circle of size s with a center at given XY coord for each index
 
             //width and height here are for testing purposes only
             //g2.drawOval(XYCoords[i].x, XYCoords[i].y, 15,15);
+
+//            if(i % 44 == 30){
+//                g2.setColor(new Color(255,0,0));
+//            }
+//            if(i % 44 == 0){
+//                g2.setColor(dotColor);
+//            }
+
             g2.setColor(dotColor);
-            if(i % 44 == 30){
-                g2.setColor(new Color(255,0,0));
-            }
             g2.fillOval(XYCoords[i].x, XYCoords[i].y, 10,10);
-            if(i % 44 == 0){
-                g2.setColor(dotColor);
-            }
+
             //make 1 out of every 44 dots red (should highlight an arm)
 
         }
@@ -56,5 +64,9 @@ public class JPGraph extends JPanel {
         // use pgraph coordinates to draw some path that text should display along
     }
 
-
+    public void renderRotatedString(Graphics2D g2, double angle, Point[] Coords, char a){
+        AffineTransform orig = g2.getTransform();
+        g2.rotate(Math.toRadians(angle));
+        g2.draw
+    }
 }
