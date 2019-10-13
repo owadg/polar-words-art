@@ -9,7 +9,7 @@ public class PGraph {
     public PGraph(int[] r, int[] o){
         this.r = r;
         this.o = o;
-        scale = 0.4;
+        scale = 0.3;
     }
 
     public void setScale(double s){
