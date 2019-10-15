@@ -8,7 +8,7 @@ public class test {
         int[] pRGraphValues = new int[max];
         int[] pOGraphValues = new int[max];
 
-        for (int i = 0; i < pRGraphValues.length; i++) {
+        for (int i = 0; i < pRGraphValues.length; i+=1) {
             pOGraphValues[i] = i;
             pRGraphValues[i] = i;
         }

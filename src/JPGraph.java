@@ -2,12 +2,18 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.beans.PropertyChangeListener;
 
 public class JPGraph extends JPanel {
     // color constants
     static final Color backGround = new Color(0,0,0);
     static final Color dotColor = new Color(100,100,255);
+    static final int delay = 50; // milliseconds
+    static final double changeInScale = 0.005;
+    boolean increase = true;
     Point center;
 
     //magic number is 25
@@ -22,6 +28,12 @@ public class JPGraph extends JPanel {
         this.p = p;
         s = "M  A  T  H  E  M  A  T  I C  A     ";
         center = new Point(this.getWidth()/3, this.getHeight() - this.getHeight()/9);
+        ActionListener taskPerformer = new ActionListener() {
+            public void actionPerformed(ActionEvent evt){
+                updateScale();
+            }
+        };
+        new Timer(delay, taskPerformer).start();
     }
 
     public void setString(String str){
@@ -51,9 +63,9 @@ public class JPGraph extends JPanel {
         //inside loop controls what is rendered
 
         g2.setColor(Color.YELLOW);
-        for(int targetModuloClass = 0; targetModuloClass < 43; targetModuloClass+=4) {
+        for(int targetModuloClass = 0; targetModuloClass < 43; targetModuloClass+=11) {
             for (int i = 0; i < (XYCoords.length / 44) - 44; i++) {
-                System.out.println(i);
+                //System.out.println(i);
                 drawRotatedChar(g2, XYCoords[44 * i + targetModuloClass], XYCoords[44 * (i + 1) + targetModuloClass], XYCoords[44 * i + 19 + targetModuloClass], s.substring(i % s.length(), (i % s.length()) + 1), i, center);
             }
         }
@@ -97,7 +109,7 @@ public class JPGraph extends JPanel {
         //makes a font with the desired height (maybe) and sets it to the graphics object
         Font myFont = g2.getFont().deriveFont((float)height);
         g2.setFont(myFont);
-        System.out.println("height: " + (float)height);
+        //System.out.println("height: " + (float)height);
 
 
         // find angle using the horizontal and vertical components of the distance between the location and the next in the macrocurve
@@ -116,5 +128,18 @@ public class JPGraph extends JPanel {
 
     public Point rotateCoordinates(double theta, Point p){
         return new Point((int)(p.x*Math.cos(theta) - p.y*Math.sin(theta)), (int)(p.y*Math.cos(theta) + p.x*Math.sin(theta)));
+    }
+
+    public void updateScale(){
+        if(increase){
+            p.scale+=changeInScale;
+            if(p.scale > 0.9)
+                increase = !increase;
+        } else {
+            p.scale -= changeInScale;
+            if(p.scale < 0.15)
+                increase = !increase;
+        }
+        repaint();
     }
 }
