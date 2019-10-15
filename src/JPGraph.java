@@ -20,7 +20,7 @@ public class JPGraph extends JPanel {
         super();
         setBackground(backGround);
         this.p = p;
-        s = "|| ";
+        s = "M  A  T  H  E  M  A  T  I C  A     ";
         center = new Point(this.getWidth()/3, this.getHeight() - this.getHeight()/9);
     }
 
@@ -47,13 +47,14 @@ public class JPGraph extends JPanel {
 
 
         //draws text first
-        //conditional statement is such because it doesnt use the outside ring
+        //outside loop controls which arm its drawn on
+        //inside loop controls what is rendered
+
         g2.setColor(Color.YELLOW);
-        for(int i = 0; i < XYCoords.length - 45; i++) {
-            if(i%11 == 0) {
-               // System.out.println("next module curve: " +equivalentNextModuloClass + "current curve: " + i + "compared to: " + (i%44)*(44)+ "\n");
-                drawRotatedChar(g2, XYCoords[i], XYCoords[i + 44], XYCoords[i + 19], s.substring(i % s.length(), (i % s.length()) + 1), i, center);
-                System.out.println(s.substring(i % s.length(), i % s.length() + 1));
+        for(int targetModuloClass = 0; targetModuloClass < 43; targetModuloClass+=4) {
+            for (int i = 0; i < (XYCoords.length / 44) - 44; i++) {
+                System.out.println(i);
+                drawRotatedChar(g2, XYCoords[44 * i + targetModuloClass], XYCoords[44 * (i + 1) + targetModuloClass], XYCoords[44 * i + 19 + targetModuloClass], s.substring(i % s.length(), (i % s.length()) + 1), i, center);
             }
         }
 
@@ -86,12 +87,12 @@ public class JPGraph extends JPanel {
         x is a string with only 1 character
     */
     public void drawRotatedChar(Graphics2D g2, Point location, Point nextInCurve, Point nextValue, String x, int i, Point center){
-        System.out.println("drawing rotated");
+        //System.out.println("drawing rotated");
 
         // find height using the distance to the next point in the series
-        System.out.println("nextValue.x: " + nextValue.x + "\n" + "location.x: " + location.x + "\nnextValue.y: " + nextValue.y + "\n" + "location.y: " + location.y);
+        //System.out.println("nextValue.x: " + nextValue.x + "\n" + "location.x: " + location.x + "\nnextValue.y: " + nextValue.y + "\n" + "location.y: " + location.y);
         //double height = Math.sqrt(Math.pow(nextValue.x - location.x, 2) - Math.pow(nextValue.y - location.y, 2));
-        double height = 0.025*i;
+        double height = 0.08333*p.scale*44*i;
 
         //makes a font with the desired height (maybe) and sets it to the graphics object
         Font myFont = g2.getFont().deriveFont((float)height);
@@ -100,13 +101,20 @@ public class JPGraph extends JPanel {
 
 
         // find angle using the horizontal and vertical components of the distance between the location and the next in the macrocurve
-        double angle = (Math.atan2(nextInCurve.x - location.x, nextInCurve.y - location.y));
-        System.out.println("angle: " + Math.toDegrees(angle));
+        double angle = (Math.atan2(location.y - nextInCurve.y, location.x - nextInCurve.x));
+        //System.out.println("angle: " + Math.toDegrees(angle));
 
         // rotates graphics for rendering rotated graphics and then rotates back
         AffineTransform old = g2.getTransform();
-        g2.rotate(angle, center.x, center.y);
+        g2.rotate(angle, location.x, location.y);
+        g2.rotate(Math.PI, location.x, location.y);
+        //Point temp = rotateCoordinates(angle, location);
+       // System.out.println("x: " + temp.x +"y: " + temp.y);
         g2.drawString(x, location.x, location.y);
         g2.setTransform(old);
+    }
+
+    public Point rotateCoordinates(double theta, Point p){
+        return new Point((int)(p.x*Math.cos(theta) - p.y*Math.sin(theta)), (int)(p.y*Math.cos(theta) + p.x*Math.sin(theta)));
     }
 }
