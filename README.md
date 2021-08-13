@@ -1,3 +1,4 @@
+![Screenshot 2021-08-13 155605](https://user-images.githubusercontent.com/54370773/129425473-9a78eac4-3dbb-4a82-99f3-a2d24b1b8d0d.png)
 # polar-words-art
 It's an art project
 
